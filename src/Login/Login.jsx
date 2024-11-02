@@ -1,13 +1,28 @@
 import React from 'react'
 import './Login.css'
 import { useState } from 'react'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Login() {
+    const navigate = useNavigate()
     const [email,setEmail]= useState('');
     const [password, setPassword]=useState('');
     function handleRegister(){
-        console.log("hello")
+        const newUser={email,password}
+        axios.post(`https://mern-ecommerece.onrender.com/api/auth/login`, newUser)
+            .then((res)=>{
+                console.log(res)
+                if(res.status===200){
+                    localStorage.setItem('userId', res.data.userId)
+                    localStorage.setItem('role',res.data.role)
+                    navigate("/")
+                }
+            })
+            .catch((err)=>{
+                alert("Invalid Credentials")
+            })
 
     }
 
